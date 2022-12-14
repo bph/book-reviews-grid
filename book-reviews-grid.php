@@ -14,7 +14,7 @@
 
     //Get plugin directory and URL paths
     $path = untrailingslashit( __DIR__ );
-    $url = untrailingslashit( plugins_url( '', __FILE__ ) );
+    $url  = untrailingslashit( plugins_url( '', __FILE__ ) );
 
     // Get auto-generated asset file
     $asset_file = "{$path}/build/index.asset.php";
