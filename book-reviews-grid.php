@@ -49,11 +49,14 @@ function bookgrid_rest_book_reviews( $args, $request ){
 add_filter( 'pre_render_block','bookgrid_pre_render_block',10,2 );
 
 function bookgrid_pre_render_block( $pre_render, $parsed_block ){
-    //Determine if this is the custom block variation
+    
+        //Determine if this is the custom block variation
 
     if ( 'book-reviews' === $parsed_block['attrs']['namespace'] ) {
-        add_filter( 'query_look_block_query_vars', function($query, $block ) use ( $parsed_block ) {
-            //Add rating meta key/value pair if queried
+        
+        add_filter( 'query_loop_block_query_vars', function($query, $block ) use ( $parsed_block ) {
+
+            //Add rating meta key/value pair if starRating value is present
             if ( $parsed_block['attrs']['query']['starRating'] ){
                 $query['meta_key'] = 'rating';
                 $query['meta_value'] = absint( $parsed_block['attrs']['query']['starRating']);
@@ -63,4 +66,5 @@ function bookgrid_pre_render_block( $pre_render, $parsed_block ){
     );
     }
     return $pre_render;
+
 }
