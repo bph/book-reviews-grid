@@ -32,3 +32,35 @@
         );
     }
 };
+
+add_filter( 'rest_post_query','bookgrid_rest_book_reviews',10,2 );
+
+function bookgrid_rest_book_reviews( $args, $request ){
+    
+    $rating = $request->get_param( 'starRating' );
+        
+        if ( $rating ) {
+            $args['meta_key'] = 'rating';
+            $args['meta_value'] = absint($rating);
+        }
+        return $args;
+}
+
+add_filter( 'pre_render_block','bookgrid_pre_render_block',10,2 );
+
+function bookgrid_pre_render_block( $pre_render, $parsed_block ){
+    //Determine if this is the custom block variation
+
+    if ( 'book-reviews' === $parsed_block['attrs']['namespace'] ) {
+        add_filter( 'query_look_block_query_vars', function($query, $block ) use ( $parsed_block ) {
+            //Add rating meta key/value pair if queried
+            if ( $parsed_block['attrs']['query']['starRating'] ){
+                $query['meta_key'] = 'rating';
+                $query['meta_value'] = absint( $parsed_block['attrs']['query']['starRating']);
+            }
+            return $query;
+        },10,2
+    );
+    }
+    return $pre_render;
+}
